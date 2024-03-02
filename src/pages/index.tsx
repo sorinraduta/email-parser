@@ -25,6 +25,7 @@ export default function Home() {
 
   const getLabels = async () => {
     try {
+      // @ts-ignore
       const res: any = await gapi.client.gmail.users.labels.list({
         userId: "me",
       });
