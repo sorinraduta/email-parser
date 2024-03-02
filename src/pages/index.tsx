@@ -41,6 +41,7 @@ export default function Home() {
 
   const getThreads = async (labelId?: string) => {
     try {
+      // @ts-ignore
       const res: any = await gapi.client.gmail.users.threads.list({
         userId: "me",
         labelIds: [labelId],

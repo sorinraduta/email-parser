@@ -20,6 +20,7 @@ const useGmail = (options: IUseGmailOptions) => {
 
   const onGapiLoad = useCallback(() => {
     setGapiInited(true);
+    // @ts-ignore
     gapi.load("client", initializeGapi);
     console.log("GAPI LOADED!");
   }, []);
@@ -87,6 +88,7 @@ const useGmail = (options: IUseGmailOptions) => {
       console.log("Signed in successfully!");
     };
 
+    // @ts-ignore
     if (gapi.client.getToken() === null) {
       // Prompt the user to select a Google Account and ask for consent to share their data
       // when establishing a new session.
