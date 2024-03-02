@@ -1,0 +1,6 @@
+{
+  "overwriteExistingFiles": "prompt",
+  "openFilesWhenDone": [
+    "<FTName | paramcase>.tsx"
+  ]
+}
