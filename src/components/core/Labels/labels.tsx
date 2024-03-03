@@ -40,7 +40,9 @@ const Labels: FC<ILabelsProps> = (props) => {
               key={label?.id}
               onClick={() => onLabelClick(label)}
               className="cursor-pointer mr-2 mb-1"
-              variant={selectedLabel?.name === name ? "default" : "outline"}
+              variant={
+                selectedLabel?.name === label.name ? "default" : "outline"
+              }
             >
               {label?.name}
             </Badge>

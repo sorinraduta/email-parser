@@ -23,13 +23,12 @@ export const parseEmailHtml = (html: string) => {
   const weight = weightMatches?.[0].replace("</td>", "");
 
   // Goods
-  let goodsRegexPattern =
-    /border-bottom-color: currentcolor;">.{1,30}<span class="Apple-converted-space">/;
+  let goodsRegexPattern = />Load:<\/td>([\r\n]|\s)+<td>.*<\/td>/;
   const goodsMatches = html.match(goodsRegexPattern);
-  console.log("acaca: ", goodsMatches);
   const goods = goodsMatches?.[0]
-    .replace('border-bottom-color: currentcolor;">', "")
-    .replace('<span class="Apple-converted-space">', "");
+    .replace(/>Load:<\/td>([\r\n]|\s)+<td>/, "")
+    .replace(/ \|.{1,8}<\/td>/, "")
+    .replace(/<sup>|<\/sup>/g, "");
 
   return {
     pickup,

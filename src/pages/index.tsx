@@ -1,26 +1,37 @@
 import { useState, useEffect } from "react";
 import { Inter } from "next/font/google";
-import { Button } from "@/components/ui/button";
-import GmailLogo from "@/components/SVGs/gmail-logo";
-import useGmail from "@/hooks/useGmail";
 import Labels from "@/components/core/Labels";
 import Threads from "@/components/core/Threads";
 import Container from "@/components/core/Container";
-import { Label } from "@/types";
+import { Label, Thread } from "@/types";
+import useAuthtStore from "@/store/auth";
+import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const GMAIL_CLIENT_ID = process.env.GMAIL_CLIENT_ID || "";
-const GMAIL_API_KEY = process.env.GMAIL_API_KEY || "";
-
-export default function Home() {
+const Home = () => {
   const [selectedLabel, setSelectedLabel] = useState<Label | null>(null);
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [threads, setThreads] = useState<any[]>([]);
+  const [labels, setLabels] = useState<Label[] | null>(null);
+  const [threads, setThreads] = useState<Thread[] | null>(null);
+  const { push } = useRouter();
 
-  const onSignIn = async () => {
-    await getLabels();
-  };
+  const { isLoggedIn } = useAuthtStore();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      return;
+    }
+
+    push("/login");
+  }, [isLoggedIn, push]);
+
+  useEffect(() => {
+    if (labels) {
+      return;
+    }
+
+    getLabels();
+  }, [labels]);
 
   const getLabels = async () => {
     try {
@@ -55,27 +66,16 @@ export default function Home() {
     }
   };
 
-  const { isInited, signIn, signOut } = useGmail({
-    CLIENT_ID: GMAIL_CLIENT_ID,
-    API_KEY: GMAIL_API_KEY,
-    onSignIn,
-  });
-
   const onLabelClick = async (label: Label) => {
     setSelectedLabel(label);
   };
 
   return (
     <main className={`${inter.className}`}>
-      <Container spacingBottom>
-        {isInited && (
-          <Button onClick={signIn}>
-            <GmailLogo height="24" width="24" className="mr-2" />
-            Login with Gmail
-          </Button>
-        )}
-      </Container>
-      {labels && labels.length > 0 && (
+      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mt-8 mb-10 text-center">
+        Email parser
+      </h1>
+      {labels && (
         <Container spacingBottom>
           <Labels
             selectedLabel={selectedLabel}
@@ -84,11 +84,13 @@ export default function Home() {
           />
         </Container>
       )}
-      {threads && threads.length > 0 && (
+      {threads && (
         <Container spacingBottom>
           <Threads threads={threads} />
         </Container>
       )}
     </main>
   );
-}
+};
+
+export default Home;

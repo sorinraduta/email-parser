@@ -1,3 +1,4 @@
+import { FC } from "react";
 import Info from "@/components/SVGs/info";
 import {
   TooltipProvider,
@@ -5,11 +6,8 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { Accordion } from "@/components/ui/accordion";
 import Thread from "@/components/core/Thread";
 import { Thread as ThreadType } from "@/types";
-
-import { FC } from "react";
 
 interface IThreadsProps {
   threads: ThreadType[];
@@ -33,11 +31,9 @@ const Threads: FC<IThreadsProps> = (props) => {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <Accordion type="single" collapsible className="w-full">
-        {threads.map((thread) => {
-          return <Thread key={thread.id} thread={thread} />;
-        })}
-      </Accordion>
+      {threads.map((thread) => {
+        return <Thread key={thread.id} thread={thread} />;
+      })}
     </div>
   );
 };
