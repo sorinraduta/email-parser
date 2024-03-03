@@ -1,6 +1,7 @@
 ### TODOs
 
-- [ ] Move API keys to .env
+- [x] Move API keys to .env
+- [x] Window obejcts types
 - [ ] Login page
 - [ ] New design for Threads
 - [ ] New Goods regex

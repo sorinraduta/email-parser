@@ -20,17 +20,19 @@ const useGmail = (options: IUseGmailOptions) => {
 
   const onGapiLoad = useCallback(() => {
     setGapiInited(true);
-    // @ts-ignore
     gapi.load("client", initializeGapi);
     console.log("GAPI LOADED!");
   }, []);
   const initializeGapi = async () => {
-    // @ts-ignore
-    await gapi.client.init({
-      apiKey: API_KEY,
-      discoveryDocs: [DISCOVERY_DOC],
-    });
-    console.log("GAPI INITED!");
+    try {
+      await gapi.client.init({
+        apiKey: API_KEY,
+        discoveryDocs: [DISCOVERY_DOC],
+      });
+      console.log("GAPI INITED!");
+    } catch (error) {
+      console.log("GAPI INI FAILED: ", error);
+    }
   };
   const onGsiLoad = useCallback(() => {
     setGsiInited(true);
@@ -38,15 +40,17 @@ const useGmail = (options: IUseGmailOptions) => {
     console.log("GSI LOADED!");
   }, []);
   const initializeGsi = () => {
-    // @ts-ignore
-    const _tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: SCOPES,
-      callback: "", // defined later
-    });
-
-    setTokenClient(_tokenClient);
-    console.log("GSI INITED!");
+    try {
+      const _tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: SCOPES,
+        callback: () => {}, // defined later
+      });
+      setTokenClient(_tokenClient);
+      console.log("GSI INITED!");
+    } catch (error) {
+      console.log("GSI INIT FAILED: ", error);
+    }
   };
 
   useEffect(() => {
@@ -88,13 +92,9 @@ const useGmail = (options: IUseGmailOptions) => {
       console.log("Signed in successfully!");
     };
 
-    // @ts-ignore
     if (gapi.client.getToken() === null) {
-      // Prompt the user to select a Google Account and ask for consent to share their data
-      // when establishing a new session.
       tokenClient.requestAccessToken({ prompt: "consent" });
     } else {
-      // Skip display of account chooser and consent dialog for an existing session.
       tokenClient.requestAccessToken({ prompt: "" });
     }
   };

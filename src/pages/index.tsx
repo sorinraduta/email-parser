@@ -10,9 +10,8 @@ import { Label } from "@/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const GMAIL_CLIENT_ID =
-  "539262134263-hs5ff5k1vrf0usqau0k4es7helomd4hn.apps.googleusercontent.com";
-const GMAIL_API_KEY = "AIzaSyDIVuqqH_uVwz0UJlUr7zTdtEupqra0000";
+const GMAIL_CLIENT_ID = process.env.GMAIL_CLIENT_ID || "";
+const GMAIL_API_KEY = process.env.GMAIL_API_KEY || "";
 
 export default function Home() {
   const [selectedLabel, setSelectedLabel] = useState<Label | null>(null);
@@ -25,7 +24,6 @@ export default function Home() {
 
   const getLabels = async () => {
     try {
-      // @ts-ignore
       const res: any = await gapi.client.gmail.users.labels.list({
         userId: "me",
       });
@@ -37,12 +35,15 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (!selectedLabel?.id) {
+      return;
+    }
+
     getThreads(selectedLabel?.id);
   }, [selectedLabel]);
 
-  const getThreads = async (labelId?: string) => {
+  const getThreads = async (labelId: string) => {
     try {
-      // @ts-ignore
       const res: any = await gapi.client.gmail.users.threads.list({
         userId: "me",
         labelIds: [labelId],

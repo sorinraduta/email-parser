@@ -19,14 +19,17 @@ const Thread: FC<IThreadProps> = (props) => {
 
   useEffect(() => {
     const getThread = async () => {
-      // @ts-ignore
       const res = await gapi.client.gmail.users.threads.get({
         userId: "me",
         id: thread.id,
       });
 
-      const _threadHtml = res.result.messages?.[0].payload.parts[1].body.data;
-      setThreadHtml(decode(_threadHtml));
+      const _threadHtml =
+        res?.result?.messages?.[0]?.payload?.parts?.[1]?.body?.data;
+
+      if (_threadHtml) {
+        setThreadHtml(decode(_threadHtml));
+      }
     };
 
     getThread();
